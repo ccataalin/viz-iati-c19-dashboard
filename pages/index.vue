@@ -345,11 +345,11 @@ export default {
       initFilterOption: '#org+id',
       selectedFilterDimension: '#org+id',
       selectedFilter: '*',
-      selectedFilterLabel: 'all publishing organizations',
+      selectedFilterLabel: '',
       filterOptions: [
-        { text: 'By Publishing Organization', value: '#org+id', label: 'all publishing organizations' },
-        { text: 'By Recipient Country or Region', value: '#country', label: 'all recipient countries and regions' },
-        { text: 'By Sector', value: '#sector', label: 'all sectors' }
+        { text: 'By Publishing Organization', value: '#org+id', label: 'publishing organizations' },
+        { text: 'By Recipient Country or Region', value: '#country', label: 'recipient countries and regions' },
+        { text: 'By Sector', value: '#sector', label: 'sectors' }
       ],
       selectedRankingFilter: '#country',
       rankingFilter: [
@@ -472,6 +472,18 @@ export default {
     },
     spendingRanked () {
       return this.getRankedList(this.spending)
+    },
+    orgCount () {
+      const orgs = [...new Set(this.filteredData.map(item => item['#org+id']))]
+      return orgs.length
+    },
+    countryCount () {
+      const countries = [...new Set(this.filteredData.map(item => item['#country']))]
+      return countries.length
+    },
+    sectorCount () {
+      const sector = [...new Set(this.filteredData.map(item => item['#sector']))]
+      return sector.length
     },
     activityCount () {
       const activities = [...new Set(this.filteredData.map(item => item['#activity+code']))]
@@ -598,8 +610,14 @@ export default {
 
           // process the transaction data
           this.fullData = response.data.data
-
           this.filteredData = this.filterData()
+
+          // set intitial filter label
+          if (this.selectedFilter !== '*') {
+            this.selectedFilterLabel = (this.selectedFilterDimension === '#org+id') ? this.getOrgName(this.selectedFilter) : this.selectedFilter
+          } else {
+            this.setDefaultFilterLabel(this.selectedFilterDimension)
+          }
         })
     },
     urlQuery () {
@@ -665,6 +683,13 @@ export default {
     onToggle (event) {
       this.filterParams[event.target.parentElement.id] = event.target.value
       this.updateFilteredData()
+
+      if (this.selectedFilter !== '*') {
+        this.selectedFilterLabel = (this.selectedFilterDimension === '#org+id') ? this.getOrgName(this.selectedFilter) : this.selectedFilter
+      } else {
+        this.setDefaultFilterLabel(this.selectedFilterDimension)
+      }
+
       this.$mixpanelTrackAction('change content', 'Commitments and Spending Breakdown toggle filter', event.target.parentElement.id + ' ' + event.target.value)
     },
     onQuickFilter (event) {
@@ -679,7 +704,16 @@ export default {
     },
     setDefaultFilterLabel (dimension) {
       const filterOption = this.filterOptions.filter(option => option.value === dimension)
-      this.selectedFilterLabel = filterOption[0].label.toLowerCase()
+      let count = ''
+      if (dimension === '#org+id') {
+        count = this.orgCount
+      } else if (dimension === '#country') {
+        count = this.countryCount
+      } else {
+        count = this.sectorCount
+      }
+
+      this.selectedFilterLabel = count + ' ' + filterOption[0].label.toLowerCase()
     },
     updateFilteredData () {
       this.filteredData = this.filterData()
