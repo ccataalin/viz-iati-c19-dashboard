@@ -592,8 +592,7 @@ export default {
   methods: {
     async loadData () {
       const dataPath = 'https://ocha-dap.github.io/hdx-scraper-iati-viz/covid/transactions.json'
-      const filePath = (config.dev) ? '' : '/viz-iati-c19-dashboard/'
-      await axios.get(filePath + 'tooltips.csv')
+      await axios.get('tooltips.csv')
         .then((response) => {
           return csvtojson().fromString(response.data).then((jsonData) => {
             this.$store.commit('setTooltips', jsonData)
