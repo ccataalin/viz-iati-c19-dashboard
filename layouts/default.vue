@@ -2,28 +2,34 @@
   <div class="iati-viz mb-4">
     <OchaHeader class="mb-4" />
     <b-container>
-      <b-navbar-brand :to="'/'">
+      <a href="./#/" class="navbar-brand" target="_self">
         <span v-html="pageTitle" />
-      </b-navbar-brand>
+      </a>
       <b-navbar toggleable="lg" type="light" variant="bg-white" class="navbar-iati">
         <b-navbar-toggle target="nav-collapse" />
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-            <b-nav-item :to="{name: 'index'}" exact-active-class="active" class="nav-index" no-prefetch @click="onClick('Commitments and Spending')">
-              Commitments and Spending
-            </b-nav-item>
-            <b-nav-item :to="{name: 'spending_flows'}" active-class="active" class="nav-flows" no-prefetch @click="onClick('Spending Flows')">
-              Spending Flows
-            </b-nav-item>
-            <b-nav-item href="https://data.humdata.org/visualization/iati-c19-datastory" target="_blank">
+            <li class="nav-item">
+              <a href="./#/" class="nav-link" target="_self" :class="{'active': isRouteActive('/') }" @click="onClick('Commitments and Spending')">
+                Commitments and Spending
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="./#/spending_flows" class="nav-link" :class="{'active': isRouteActive('/spending_flows') }" target="_self" @click="onClick('Spending Flows')">
+                Spending Flows
+              </a>
+            </li>
+            <b-nav-item href="https://data.humdata.org/visualization/iati-c19-datastory" target="_blank" @click="onClick('About this Dashboard')">
               Data Story
             </b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item :to="{name: 'about'}" active-class="active" class="ml-lg-auto nav-about" no-prefetch @click="onClick('About this Dashboard')">
-              About this Dashboard
-            </b-nav-item>
+            <li class="nav-item ml-lg-auto">
+              <a href="./#/about" class="nav-link" :class="{'active': isRouteActive('/about') }" target="_self">
+                About this Dashboard
+              </a>
+            </li>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -150,6 +156,9 @@ export default {
   methods: {
     onClick (page) {
       this.$mixpanelTrackAction('switch viz', config.head.title, page)
+    },
+    isRouteActive (name) {
+      return this.$route.path === name
     }
   }
 }
