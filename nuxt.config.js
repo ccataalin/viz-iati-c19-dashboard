@@ -1,11 +1,5 @@
-const routerBase = process.env.DEPLOY_ENV === 'WITH_SUBFOLDER'
-  ? {
-      router: {
-        base: '.',
-        mode: 'hash'
-      }
-    }
-  : {}
+const withSubfolder = process.env.DEPLOY_ENV === 'WITH_SUBFOLDER'
+
 export default {
   /*
   ** Headers of the page
@@ -91,7 +85,7 @@ export default {
     }]
   ],
   build: {
-    publicPath: process.env.DEPLOY_ENV === 'WITH_SUBFOLDER' ? './' : '/_nuxt/',
+    publicPath: withSubfolder ? './' : '/_nuxt/',
     /*
     ** You can extend webpack config here
     */
@@ -99,11 +93,14 @@ export default {
       config.externals = {
         moment: 'moment'
       }
-      config.output.publicPath = process.env.DEPLOY_ENV === 'WITH_SUBFOLDER' ? './' : config.output.publicPath
+      config.output.publicPath = withSubfolder ? './' : config.output.publicPath
     }
   },
   target: 'static',
-  ssr: process.env.DEPLOY_ENV !== 'WITH_SUBFOLDER',
+  ssr: !withSubfolder,
   dev: process.env.NODE_ENV !== 'production',
-  ...routerBase
+  router: {
+    base: withSubfolder ? '.' : '/',
+    mode: 'hash'
+  }
 }
