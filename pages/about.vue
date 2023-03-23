@@ -5,24 +5,24 @@
         <b-col cols="3" class="d-none d-lg-block d-xl-none">
           <ul class="jump-nav">
             <li>
-              <nuxt-link :to="{ name: 'about', hash: '#methodology' }">
+              <a href="./#/about#methodology">
                 Methodology Notes
-              </nuxt-link>
+              </a>
             </li>
             <li>
-              <nuxt-link :to="{ name: 'about', hash: '#developers' }">
+              <a href="./#/about#developers">
                 Technical Details / Resources for Developers
-              </nuxt-link>
+              </a>
             </li>
             <li>
-              <nuxt-link :to="{ name: 'about', hash: '#tos' }">
+              <a href="./#/about#tos">
                 Terms of Service / Privacy Notice
-              </nuxt-link>
+              </a>
             </li>
             <li>
-              <nuxt-link :to="{ name: 'about', hash: '#contact' }">
+              <a href="./#/about#contact">
                 Get in Touch
-              </nuxt-link>
+              </a>
             </li>
           </ul>
         </b-col>
